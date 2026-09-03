@@ -61,9 +61,9 @@ fun TP1_entregableApp() {
     ) {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             when (currentDestination) {
-                AppDestinations.HOME -> HomeScreen(innerPadding)
-                AppDestinations.FAVORITES -> FavoritesScreen(innerPadding)
-                AppDestinations.PROFILE -> ProfileScreen(innerPadding)
+                AppDestinations.HOME -> HomeScreen(modifier = Modifier.padding(innerPadding))
+                AppDestinations.FAVORITES -> FavoritesScreen(modifier = Modifier.padding(innerPadding))
+                AppDestinations.PROFILE -> ProfileScreen(modifier = Modifier.padding(innerPadding))
             }
         }
     }

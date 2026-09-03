@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "997690598525",
+    "project_id": "tp1-entregable-loam",
+    "storage_bucket": "tp1-entregable-loam.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:997690598525:android:1d6bda0e2dfdfadb717d14",
+        "android_client_info": {
+          "package_name": "com.example.tp1_entregable"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBTLFjV3k2ELbFFeqyGdUvucqHUKJs6o7M"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
