@@ -18,36 +18,38 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.FirebaseFirestore
 
-// Modelo de datos simple para representar un Auto
-data class Auto(
+// Modelo de datos simple para representar un contacto de emergencia
+data class Contactos_emergencia(
     val id: String = "",
-    val marca: String = ""
+    val nombre: String = "",
+    val numero: String = ""
 )
 
 @Composable
 fun FavoritesScreen(modifier: Modifier = Modifier) {
     val db = FirebaseFirestore.getInstance()
     // Lista reactiva que se actualizará cuando lleguen datos de Firebase
-    val autosList = remember { mutableStateListOf<Auto>() }
+    val contactosEmergenciaList = remember { mutableStateListOf<Contactos_emergencia>() }
 
-    // Escuchar la colección "autos" en tiempo real
+    // Escuchar la colección "contactos_emergencia" en tiempo real
     LaunchedEffect(Unit) {
-        db.collection("autos")
+        db.collection("contactos_emergencia")
             .addSnapshotListener { snapshot, e ->
                 if (e != null) {
                     return@addSnapshotListener
                 }
 
                 if (snapshot != null) {
-                    autosList.clear()
+                    contactosEmergenciaList.clear()
                     for (doc in snapshot.documents) {
-                        // Mapeamos el documento a nuestra clase Auto
-                        // Asumimos que en Firebase tienes campos "nombre" y "marca"
-                        val auto = Auto(
+                        // Mapeamos el documento a nuestra clase Contactos_emergencia
+                        // Asumimos que en Firebase tienes campos "nombre" y "numero"
+                        val contacto = Contactos_emergencia(
                             id = doc.id,
-                            marca = doc.getString("marca") ?: "Sin marca"
+                            nombre = doc.getString("nombre") ?: "Sin nombre",
+                            numero = doc.getString("numero") ?: "Sin numero"
                         )
-                        autosList.add(auto)
+                        contactosEmergenciaList.add(contacto)
                     }
                 }
             }
@@ -55,17 +57,17 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
 
     Column(modifier = modifier.fillMaxSize().padding(16.dp)) {
         Text(
-            text = "Mis Autos Favoritos",
+            text = "Contactos de emergencia",
             style = MaterialTheme.typography.headlineMedium,
             modifier = Modifier.padding(bottom = 16.dp)
         )
 
-        if (autosList.isEmpty()) {
-            Text(text = "Cargando autos o la colección está vacía...")
+        if (contactosEmergenciaList.isEmpty()) {
+            Text(text = "Cargando contactos de emergencia o la colección está vacía...")
         } else {
             LazyColumn {
-                items(autosList) { auto ->
-                    AutoItem(auto)
+                items(contactosEmergenciaList) { auto ->
+                    ContactoItem(auto)
                 }
             }
         }
@@ -73,7 +75,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun AutoItem(auto: Auto) {
+fun ContactoItem(contacto: Contactos_emergencia) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -81,7 +83,8 @@ fun AutoItem(auto: Auto) {
         elevation = CardDefaults.cardElevation(defaultElevation = 4.dp)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Text(text = "Marca: ${auto.marca}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Nombre: ${contacto.nombre}", style = MaterialTheme.typography.bodyMedium)
+            Text(text = "Numero: ${contacto.numero}", style = MaterialTheme.typography.bodyMedium)
         }
     }
 }

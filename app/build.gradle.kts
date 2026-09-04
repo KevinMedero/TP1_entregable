@@ -13,7 +13,7 @@ android {
     }
 
     defaultConfig {
-        applicationId = "com.example.tp1_entregable"
+        applicationId = "com.medero.tp1_entregable"
         minSdk = 24
         targetSdk = 37
         versionCode = 1
@@ -63,4 +63,7 @@ dependencies {
     // When using the BoM, don't specify versions in Firebase dependencies
     // https://firebase.google.com/docs/android/setup#available-libraries
     implementation("com.google.firebase:firebase-firestore")
+
+    // Para el mapa
+    implementation("org.osmdroid:osmdroid-android:6.1.20")
 }
