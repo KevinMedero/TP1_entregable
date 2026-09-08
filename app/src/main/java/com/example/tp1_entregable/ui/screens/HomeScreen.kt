@@ -2,6 +2,7 @@ package com.example.tp1_entregable.ui.screens
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.widget.Button
 import androidx.compose.animation.animateColor
 import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.RepeatMode
@@ -41,6 +42,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 @Composable
 fun HomeScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
+
+    // -----------------------------------------------------------------------------------------------------
+    // ALERTA DE EMERGENCIA
+    // -----------------------------------------------------------------------------------------------------
 
     val emergencyManager = remember { EmergencyAlertManager(context) }
 
@@ -91,7 +96,8 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     // Define la tarea que verifica si ya llegó la hora
                     checkRunnable = object : Runnable {
                         override fun run() {
-                            val nowHour = SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
+                            val nowHour =
+                                SimpleDateFormat("HH:mm", Locale.getDefault()).format(Date())
 
                             for (doc in snapshot.documents) {
                                 val eventHour = doc.getString("hora")
@@ -123,41 +129,74 @@ fun HomeScreen(modifier: Modifier = Modifier) {
         }
     }
 
-    Box(modifier = modifier.fillMaxSize()) {
-        // Tu interfaz original (AndroidView, etc.)
-        AndroidView(
-            factory = { ctx ->
-                LayoutInflater.from(ctx).inflate(R.layout.layout_home, null)
-            },
-            modifier = Modifier.fillMaxSize()
-        )
+    // -----------------------------------------------------------------------------------------------------
+    // DIRECCION A OTRAS SCREENS: CHAT CON ASISTENCIA Y GUIA
+    // -----------------------------------------------------------------------------------------------------
 
-        // Interfaz de pantalla entera con efecto de luces si hay emergencia
-        if (isEmergencyActive) {
-            Box(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .background(flashColor.copy(alpha = 0.7f))
-            ) {
-                Column(
-                    modifier = Modifier.align(Alignment.Center),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Text(
-                        text = "¡ALERTA DE CATASTROFE!",
-                        color = Color.White,
-                        fontSize = 28.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-                    Spacer(modifier = Modifier.height(16.dp))
-                    Button(
-                        onClick = {
-                            isEmergencyActive = false
-                            emergencyManager.stopAlert()
-                        },
-                        colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+    var showChatScreen by remember { mutableStateOf(false) }
+
+    when {
+        showChatScreen -> {
+            ChatScreen(
+                onBackClick = { showChatScreen = false }
+            )
+        }
+        /*showGuideScreen -> {
+            GuideScreen(
+                onBackClick = { showGuideScreen = false }
+            )
+        }
+         */
+        else -> {
+            Box(modifier = modifier.fillMaxSize()) {
+                // Interfaz original (AndroidView, etc.)
+                AndroidView(
+                    factory = { ctx ->
+                        val view = LayoutInflater.from(ctx).inflate(R.layout.layout_home, null)
+
+                        // -----------------------------------------------------------------------------------------------------
+                        // BOTON PARA EL CHAT DE ASISTENCIA
+                        // -----------------------------------------------------------------------------------------------------
+
+                        // Botón para el Chat con Asistencia
+                        val btnChat = view.findViewById<Button>(R.id.btn_chat)
+                        btnChat?.setOnClickListener {
+                            showChatScreen = true
+                        }
+
+                        view
+                    },
+                    modifier = Modifier.fillMaxSize()
+                )
+
+                // Interfaz de pantalla entera con efecto de luces si hay emergencia
+                if (isEmergencyActive) {
+                    Box(
+                        modifier = Modifier
+                            .fillMaxSize()
+                            .background(flashColor.copy(alpha = 0.7f))
                     ) {
-                        Text(text = "DESACTIVAR ALERTA", color = Color.Red)
+                        Column(
+                            modifier = Modifier.align(Alignment.Center),
+                            horizontalAlignment = Alignment.CenterHorizontally
+                        ) {
+                            Text(
+                                text = "¡ALERTA DE CATASTROFE!",
+                                color = Color.White,
+                                fontSize = 28.sp,
+                                fontWeight = FontWeight.Bold
+                            )
+                            Spacer(modifier = Modifier.height(16.dp))
+                            Button(
+                                onClick = {
+                                    isEmergencyActive = false
+                                    emergencyManager.stopAlert()
+                                },
+                                colors = ButtonDefaults.buttonColors(containerColor = Color.White)
+                            ) {
+                                Text(text = "DESACTIVAR ALERTA", color = Color.Red)
+                            }
+                        }
                     }
                 }
             }

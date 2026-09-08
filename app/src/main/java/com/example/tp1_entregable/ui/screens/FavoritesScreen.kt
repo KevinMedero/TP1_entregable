@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.dp
 import com.google.firebase.firestore.FirebaseFirestore
 
 // Modelo de datos para representar un contacto de emergencia
-data class Contactos_emergencia(
+data class ContactoEmergencia(
     val id: String = "",
     val nombre: String = "",
     val numero: String = ""
@@ -40,7 +40,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
     // Instancia de Firebase
     val db = FirebaseFirestore.getInstance()
     // Lista reactiva que se actualizará cuando lleguen datos de Firebase
-    val contactosEmergenciaList = remember { mutableStateListOf<Contactos_emergencia>() }
+    val contactosEmergenciaList = remember { mutableStateListOf<ContactoEmergencia>() }
 
     // DisposableEffect para remover el listener cuando la pantalla se destruya
     DisposableEffect(Unit) {
@@ -53,7 +53,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
                 if (snapshot != null) {
                     contactosEmergenciaList.clear()
                     for (doc in snapshot.documents) {
-                        val contacto = Contactos_emergencia(
+                        val contacto = ContactoEmergencia(
                             id = doc.id,
                             nombre = doc.getString("nombre") ?: "Sin nombre",
                             numero = doc.getString("numero") ?: "Sin número"
@@ -89,7 +89,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
 }
 
 @Composable
-fun ContactoItem(contacto: Contactos_emergencia) {
+fun ContactoItem(contacto: ContactoEmergencia) {
     val context = LocalContext.current
 
     Card(
