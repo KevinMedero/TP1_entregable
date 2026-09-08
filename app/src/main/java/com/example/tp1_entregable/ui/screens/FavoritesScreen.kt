@@ -37,6 +37,7 @@ data class Contactos_emergencia(
 
 @Composable
 fun FavoritesScreen(modifier: Modifier = Modifier) {
+    // Instancia de Firebase
     val db = FirebaseFirestore.getInstance()
     // Lista reactiva que se actualizará cuando lleguen datos de Firebase
     val contactosEmergenciaList = remember { mutableStateListOf<Contactos_emergencia>() }

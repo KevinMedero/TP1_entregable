@@ -66,4 +66,7 @@ dependencies {
 
     // Para el mapa
     implementation("org.osmdroid:osmdroid-android:6.1.20")
+
+    // Necesario para FusedLocationProviderClient (GPS) en el mapa
+    implementation("com.google.android.gms:play-services-location:21.3.0")
 }
