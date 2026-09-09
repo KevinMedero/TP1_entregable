@@ -40,16 +40,18 @@
 
     <TextView
         android:id="@+id/tv_battery_box"
-        android:layout_width="413dp"
-        android:layout_height="71dp"
-        android:background="#FEF08A"
+        android:layout_width="388dp"
+        android:layout_height="74dp"
+        android:background="#FFFFFF"
         android:padding="12dp"
         android:text="Calculando batería..."
-        android:textColor="#713F12"
+        android:textColor="#2850C6"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.47"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="0.470" />
 
     <Button
         android:id="@+id/btn_guia"
@@ -69,7 +71,7 @@
         android:layout_height="1dp"
         android:layout_marginStart="16dp"
         android:layout_marginEnd="12dp"
-        android:background="#CCCCCC"
+        android:background="#2850C6"
         app:layout_constraintBottom_toBottomOf="@id/tv_grabar_title"
         app:layout_constraintEnd_toStartOf="@id/tv_grabar_title"
         app:layout_constraintStart_toStartOf="parent"
@@ -83,11 +85,12 @@
         android:id="@+id/tv_grabar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="268dp"
         android:text="GRABAR"
-        android:textColor="#FFFFFF"
+        android:textColor="#2850C6"
         android:textSize="14sp"
         android:textStyle="bold"
+        app:layout_constraintVertical_bias="0.65"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/wv_weather_widget" />
@@ -98,7 +101,7 @@
         android:layout_height="1dp"
         android:layout_marginStart="12dp"
         android:layout_marginEnd="16dp"
-        android:background="#CCCCCC"
+        android:background="#2850C6"
         app:layout_constraintBottom_toBottomOf="@id/tv_grabar_title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tv_grabar_title"
@@ -141,10 +144,10 @@
         app:layout_constraintVertical_bias="0.939" />
 
     <Button
-        android:id="@+id/btn_video_frontal"
+        android:id="@+id/btn_video_trasera"
         android:layout_width="110dp"
         android:layout_height="90dp"
-        android:text="frontal"
+        android:text="trasera"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.046"

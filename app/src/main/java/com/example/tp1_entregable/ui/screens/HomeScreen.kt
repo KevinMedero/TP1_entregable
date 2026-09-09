@@ -154,7 +154,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     // -----------------------------------------------------------------------------------------------------
 
     // Estados de grabbing
-    var isRecordingFrontal by remember { mutableStateOf(false) }
+    var isRecordingTrasera by remember { mutableStateOf(false) }
     var isRecordingSelfie by remember { mutableStateOf(false) }
     var isRecordingAudio by remember { mutableStateOf(false) }
 
@@ -356,12 +356,12 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         }
 
                         // -----------------------------------------------------------------------------------------------------
-                        // BOTON GRABAR VIDEO (FRONTAL Y SELFI) Y AUDIO POR MICROFONO
+                        // BOTON GRABAR VIDEO (TRASERA Y SELFI) Y AUDIO POR MICROFONO
                         // -----------------------------------------------------------------------------------------------------
 
                         // Grabar Video Cámara Trasera
-                        val btnFrontal: Button? = view.findViewById(R.id.btn_video_frontal)
-                        btnFrontal?.setOnClickListener {
+                        val btnTrasera: Button? = view.findViewById(R.id.btn_video_trasera)
+                        btnTrasera?.setOnClickListener {
                             if (isRecordingSelfie || isRecordingAudio) {
                                 Toast.makeText(
                                     context,
@@ -371,9 +371,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                                 return@setOnClickListener
                             }
 
-                            if (isRecordingFrontal) {
+                            if (isRecordingTrasera) {
                                 videoManager.startRecording("TRASERA") { state ->
-                                    isRecordingFrontal = state
+                                    isRecordingTrasera = state
                                 }
                             } else {
                                 videoManager.setupCamera(
@@ -382,7 +382,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                                     previewView.surfaceProvider
                                 ) {
                                     videoManager.startRecording("TRASERA") { state ->
-                                        isRecordingFrontal = state
+                                        isRecordingTrasera = state
                                     }
                                 }
                             }
@@ -391,7 +391,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         // Grabar Video Cámara Selfie
                         val btnSelfie: Button? = view.findViewById(R.id.btn_video_selfie)
                         btnSelfie?.setOnClickListener {
-                            if (isRecordingFrontal || isRecordingAudio) {
+                            if (isRecordingTrasera || isRecordingAudio) {
                                 Toast.makeText(
                                     context,
                                     "Detenga la otra grabación primero",
@@ -420,7 +420,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         // Grabar Audio con Micrófono
                         val btnAudio: Button? = view.findViewById(R.id.btn_grabar_audio)
                         btnAudio?.setOnClickListener {
-                            if (isRecordingFrontal || isRecordingSelfie) {
+                            if (isRecordingTrasera || isRecordingSelfie) {
                                 Toast.makeText(
                                     context,
                                     "Detenga la grabación de video primero",
@@ -452,7 +452,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         // Sincroniza el TextView de la batería por su ID y le asigno el texto
                         val tvBatteryBox: TextView? = view.findViewById(R.id.tv_battery_box)
                         tvBatteryBox?.text = "Batería: ${batteryInfo.percentage}%\n" +
-                                "Duración estim.: ${batteryInfo.hoursRemainingText}\n" +
+                                "Duración estimada: ${batteryInfo.hoursRemainingText}\n" +
                                 "Se agotará a las: ${batteryInfo.formattedTimeToEmpty}"
 
                         // -----------------------------------------------------------------------------------------------------
@@ -468,9 +468,9 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         // -----------------------------------------------------------------------------------------------------
 
                         // Actualización de textos en tiempo real según el estado
-                        val btnFrontal: Button? = view.findViewById(R.id.btn_video_frontal)
+                        val btnFrontal: Button? = view.findViewById(R.id.btn_video_trasera)
                         btnFrontal?.text =
-                            if (isRecordingFrontal) "DETENER VIDEO TRASERA" else "VIDEO TRASERA"
+                            if (isRecordingTrasera) "DETENER VIDEO TRASERA" else "VIDEO TRASERA"
 
                         val btnSelfie: Button? = view.findViewById(R.id.btn_video_selfie)
                         btnSelfie?.text =
