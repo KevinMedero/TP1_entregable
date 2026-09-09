@@ -1,0 +1,34 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Document</title>
+</head>
+<body>
+
+    <!-- Widget para General Pico utilizando weatherwidget-io -->
+    <a class="weatherwidget-io"
+       href="https://forecast7.com/es/n35d66n63d76/general-pico/"
+       data-label_1="GENERAL PICO"
+       data-label_2="CLIMA"
+       data-font="Roboto"
+       data-theme="original"
+       data-highcolor="#ffffff"
+       data-lowcolor="#ffffff" >
+        GENERAL PICO CLIMA
+    </a>
+    <script>
+        !function(d,s,id){
+            var js,fjs=d.getElementsByTagName(s)[0];
+            if(!d.getElementById(id)){
+                js=d.createElement(s);
+                js.id=id;
+                js.src='https://weatherwidget.io/js/widget.min.js';
+                fjs.parentNode.insertBefore(js,fjs);
+            }
+        }(document,'script','weatherwidget-io-js');
+    </script>
+
+</body>
+</html>

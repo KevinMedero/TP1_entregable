@@ -199,9 +199,9 @@ fun ProfileScreen(modifier: Modifier = Modifier) {
 
     Box(modifier = modifier.fillMaxSize()) {
         AndroidView(
-            factory = { ctx ->
+            factory = { context ->
                 // Infla el layout XML existente
-                val view = LayoutInflater.from(ctx).inflate(R.layout.layout_profile, null)
+                val view = LayoutInflater.from(context).inflate(R.layout.layout_profile, null)
 
                 // Obtiene la referencia del MapView desde el XML o configurarlo directamente
                 val map = view.findViewById<MapView>(R.id.mapView)
