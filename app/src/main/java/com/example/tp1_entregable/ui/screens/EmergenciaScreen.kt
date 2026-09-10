@@ -38,23 +38,25 @@ import androidx.compose.ui.viewinterop.AndroidView
 import com.example.tp1_entregable.ui.utils.SOSEmergencyManager
 import com.google.firebase.firestore.FirebaseFirestore
 
-// Modelo de datos para representar un contacto de emergencia
+// Modelo de datos para representar un contacto de emergencia guardado en Firebase
 data class ContactoEmergencia(
     val id: String = "",
     val nombre: String = "",
     val numero: String = ""
 )
 
+// Pantalla de emergencia que combina lista nativa en Compose y vista inflada desde XML para el S.O.S.
 @Composable
-fun FavoritesScreen(modifier: Modifier = Modifier) {
+fun EmergenciaScreen(modifier: Modifier = Modifier) {
     val context = LocalContext.current
 
-    // Instancia de Firebase
+    // Instancia de Firestore para consultar la colección de contactos
     val db = FirebaseFirestore.getInstance()
+
     // Lista reactiva que se actualizará cuando lleguen datos de Firebase
     val contactosEmergenciaList = remember { mutableStateListOf<ContactoEmergencia>() }
 
-    // DisposableEffect para remover el listener y liberar recursos cuando la pantalla se destruya
+    // Ciclo de vida: suscripción en tiempo real a la colección "contactos_emergencia" en Firestore
     DisposableEffect(Unit) {
         val listenerRegistration = db.collection("contactos_emergencia")
             .addSnapshotListener { snapshot, e ->
@@ -64,6 +66,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
 
                 if (snapshot != null) {
                     contactosEmergenciaList.clear()
+                    // Mapea cada documento recibido de la base de datos a una instancia de ContactoEmergencia
                     for (doc in snapshot.documents) {
                         val contacto = ContactoEmergencia(
                             id = doc.id,
@@ -75,7 +78,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
                 }
             }
 
-        // Evita fugas de memoria y consumo innecesario de lecturas en Firestore en segundo plano
+        // Se ejecuta al salir de la pantalla: destruye el listener de Firestore y libera los recursos de hardware
         onDispose {
             listenerRegistration.remove()
         }
@@ -106,6 +109,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
                 Text(text = "Cargando contactos de emergencia o la colección está vacía...")
             } else {
                 LazyColumn {
+                    // Lista de desplazamiento eficiente para renderizar los elementos
                     items(contactosEmergenciaList) { contacto ->
                         ContactoItem(contacto = contacto)
                     }
@@ -120,18 +124,19 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
         // -----------------------------------------------------------------------------------------
         AndroidView(
             factory = { context ->
-                val view = LayoutInflater.from(context).inflate(R.layout.layout_favorites, null)
+                val view = LayoutInflater.from(context).inflate(R.layout.layout_emergencia, null)
 
-                // Listener del botón S.O.S. en el XML
+                // Obtiene la referencia al botón S.O.S. y le asigna el listener de activación
                 val btnSos = view.findViewById<Button>(R.id.btn_sos)
                 btnSos?.setOnClickListener {
                     sosManager.toggleSos { newState ->
-                        isSosActive = newState
+                        isSosActive = newState  // Actualiza el estado reactivo
                     }
                 }
 
                 view
             },
+            // Bloque de actualización: Se vuelve a ejecutar cuando la variable isSosActive cambia
             update = { view ->
                 // Actualiza el texto en tiempo real cuando cambia el estado del S.O.S.
                 val btnSos = view.findViewById<Button>(R.id.btn_sos)
@@ -142,6 +147,7 @@ fun FavoritesScreen(modifier: Modifier = Modifier) {
     }
 }
 
+// Componente individual que renderiza la tarjeta de información y el botón de llamada directa para cada contacto
 @Composable
 fun ContactoItem(contacto: ContactoEmergencia) {
     val context = LocalContext.current
@@ -159,6 +165,7 @@ fun ContactoItem(contacto: ContactoEmergencia) {
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+            // Columna con los datos de texto del contacto
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     text = contacto.nombre,
@@ -171,10 +178,10 @@ fun ContactoItem(contacto: ContactoEmergencia) {
                 )
             }
 
-            // Botón para iniciar la llamada
+            // Botón de acción para abrir la aplicación del marcador telefónico del sistema
             IconButton(
                 onClick = {
-                    // Al presionar el botón de teléfono, se abre el marcador del sistema con el número cargado desde Firestore
+                    // Crea un Intent implícito para abrir la aplicación de llamadas con el número precargado
                     val intent = Intent(Intent.ACTION_DIAL).apply {
                         data = Uri.parse("tel:${contacto.numero}")
                     }

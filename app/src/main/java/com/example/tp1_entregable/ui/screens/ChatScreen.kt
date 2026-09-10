@@ -22,9 +22,10 @@ import com.google.firebase.firestore.FirebaseFirestore
 data class MensajeChat(
     val remitente: String = "", // "usuario" o "asistente"
     val mensaje: String = "",
-    val fechaHora: Long = System.currentTimeMillis()
+    val fechaHora: Long = System.currentTimeMillis()  // Para ordenar cronológicamente los mensajes
 )
 
+// Pantalla principal del Chat de Asistencia usando Jetpack Compose
 @Composable
 fun ChatScreen(
     onBackClick: () -> Unit,
@@ -33,19 +34,20 @@ fun ChatScreen(
     var messageText by remember { mutableStateOf("") }
     val messagesList = remember { mutableStateListOf<MensajeChat>() }
 
-    // Referencia a Firestore
+    // Instancia y referencia a a la colleccion de Firestore
     val db = FirebaseFirestore.getInstance()
     val messagesCollection = db.collection("mensajes_chat")
 
-    // Escuchar mensajes en tiempo real ordenados por fechaHora
+    // Ciclo de vida: Configura un listener en tiempo real al abrir la pantalla y lo destruye al salir
     DisposableEffect(Unit) {
         val registro = messagesCollection
-            .orderBy("fechaHora", Query.Direction.ASCENDING)
+            .orderBy("fechaHora", Query.Direction.ASCENDING)    // Ordena los mensajes del más antiguo al más reciente
             .addSnapshotListener { snapshot, error ->
                 if (error != null) return@addSnapshotListener
 
                 if (snapshot != null) {
                     messagesList.clear()
+                    // Itera sobre los documentos recuperados y los mapea al objeto MensajeChat
                     for (doc in snapshot.documents) {
                         try {
                             val mensajeObtenido = doc.toObject(MensajeChat::class.java)
@@ -59,6 +61,7 @@ fun ChatScreen(
                 }
             }
 
+        // Se ejecuta cuando el usuario sale del chat
         onDispose {
             registro.remove()
         }
@@ -67,7 +70,7 @@ fun ChatScreen(
     Column(
         modifier = modifier
             .fillMaxSize()
-            .statusBarsPadding()
+            .statusBarsPadding()    // Evita que la interfaz se solape con la barra de estado del sistema operativo
             .background(MaterialTheme.colorScheme.background)
     ) {
         // Encabezado Superior
@@ -125,6 +128,7 @@ fun ChatScreen(
 
             Button(
                 onClick = {
+                    // Solo envía a la base de datos si el texto no está vacío
                     if (messageText.isNotBlank()) {
                         val docRef = messagesCollection.document()
                         val nuevoMensaje = MensajeChat(
@@ -132,8 +136,8 @@ fun ChatScreen(
                             mensaje = messageText.trim(),
                             fechaHora = System.currentTimeMillis()
                         )
-                        docRef.set(nuevoMensaje)
-                        messageText = ""
+                        docRef.set(nuevoMensaje)  // Sube el objeto serializado a Firestore
+                        messageText = ""          // Limpia la caja de texto
                     }
                 },
                 shape = RoundedCornerShape(24.dp)
@@ -144,6 +148,7 @@ fun ChatScreen(
     }
 }
 
+// Componente individual que representa gráficamente cada mensaje recibido de Firebase
 @Composable
 fun MessageBubble(mensajeObj: MensajeChat) {
     val isUsuario = mensajeObj.remitente == "usuario"
@@ -162,12 +167,14 @@ fun MessageBubble(mensajeObj: MensajeChat) {
             tonalElevation = 1.dp
         ) {
             Column(modifier = Modifier.padding(10.dp)) {
+                // Etiqueta del remitente
                 Text(
                     text = if (isUsuario) "Tú" else "Representante",
                     fontSize = 11.sp,
                     fontWeight = FontWeight.Bold,
                     color = Color.Gray
                 )
+                // Cuerpo del mensaje
                 Text(
                     text = mensajeObj.mensaje,
                     fontSize = 14.sp

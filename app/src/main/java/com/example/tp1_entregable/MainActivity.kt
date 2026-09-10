@@ -20,9 +20,9 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.tooling.preview.PreviewScreenSizes
-import com.example.tp1_entregable.ui.screens.FavoritesScreen
+import com.example.tp1_entregable.ui.screens.EmergenciaScreen
 import com.example.tp1_entregable.ui.screens.HomeScreen
-import com.example.tp1_entregable.ui.screens.ProfileScreen
+import com.example.tp1_entregable.ui.screens.UbicacionScreen
 import com.example.tp1_entregable.ui.theme.TP1_entregableTheme
 
 class MainActivity : ComponentActivity() {
@@ -62,8 +62,8 @@ fun TP1_entregableApp() {
         Scaffold(modifier = Modifier.fillMaxSize()) { innerPadding ->
             when (currentDestination) {
                 AppDestinations.HOME -> HomeScreen(modifier = Modifier.padding(innerPadding))
-                AppDestinations.FAVORITES -> FavoritesScreen(modifier = Modifier.padding(innerPadding))
-                AppDestinations.PROFILE -> ProfileScreen(modifier = Modifier.padding(innerPadding))
+                AppDestinations.EMERGENCIA -> EmergenciaScreen(modifier = Modifier.padding(innerPadding))
+                AppDestinations.UBICACION -> UbicacionScreen(modifier = Modifier.padding(innerPadding))
             }
         }
     }
@@ -74,8 +74,8 @@ enum class AppDestinations(
     val icon: Int,
 ) {
     HOME("Home", R.drawable.ic_home),
-    FAVORITES("Emergencia", R.drawable.ic_emergency),
-    PROFILE("Ubicación", R.drawable.ic_location),
+    EMERGENCIA("Emergencia", R.drawable.ic_emergency),
+    UBICACION("Ubicación", R.drawable.ic_location),
 }
 
 @Composable

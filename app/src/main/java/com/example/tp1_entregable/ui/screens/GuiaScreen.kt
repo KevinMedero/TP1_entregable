@@ -29,7 +29,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import com.example.tp1_entregable.R
 
-// Modelo de datos para cada catástrofe
+// Modelo de datos para representar la información de cada guía de catástrofe
 data class GuiaDeCatastrofe(
     val id: String,
     val titulo: String,
@@ -39,12 +39,13 @@ data class GuiaDeCatastrofe(
     val videoRawId: Int? = null // ID de video en res/raw (opcional)
 )
 
+// Pantalla principal de la Guía de Acción ante Catástrofes mediante Jetpack Compose
 @Composable
 fun GuiaScreen(
     onBackClick: () -> Unit,
     modifier: Modifier = Modifier
 ) {
-    // Lista de las 3 catástrofes con sus imágenes y guías
+    // Lista de catastrofes
     val guides = listOf(
         GuiaDeCatastrofe(
             id = "1",
@@ -95,7 +96,7 @@ fun GuiaScreen(
             tonalElevation = 3.dp,
             modifier = Modifier
                 .fillMaxWidth()
-                .statusBarsPadding() // <- Esta linea empuja el contenido debajo de la barra superior del telefono
+                .statusBarsPadding() // Esta linea empuja el contenido debajo de la barra superior del telefono
         ) {
             Row(
                 modifier = Modifier
@@ -103,7 +104,7 @@ fun GuiaScreen(
                     .padding(horizontal = 8.dp, vertical = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                // Vuelve para atras (Inicio)
+                // Botón de acción para regresar a la pantalla de Inicio (HomeScreen)
                 IconButton(onClick = onBackClick) {
                     Icon(
                         painter = painterResource(id = R.drawable.ic_arrow_back),
@@ -126,6 +127,7 @@ fun GuiaScreen(
                 .padding(horizontal = 16.dp, vertical = 8.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
+            // Renderiza eficientemente cada elemento de la lista mediante el componente GuiaCard
             items(guides) { guia ->
                 GuiaCard(guia = guia)
             }
@@ -133,6 +135,7 @@ fun GuiaScreen(
     }
 }
 
+// Componente individual que dibuja la información detallada, imagen, lista de pasos y video
 @Composable
 fun GuiaCard(guia: GuiaDeCatastrofe) {
     Card(

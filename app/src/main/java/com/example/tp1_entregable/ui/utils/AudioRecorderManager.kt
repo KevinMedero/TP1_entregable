@@ -12,15 +12,23 @@ import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
 
+// Clase auxiliar para gestionar la grabación de audio en el almacenamiento del dispositivo
 class AudioRecorderManager(private val context: Context) {
 
+    // Instancia del MediaRecorder nativo para capturar audio desde el micrófono
     private var mediaRecorder: MediaRecorder? = null
+
+    // Ruta física del archivo guardado
     private var outputFile: String = ""
+
+    // URI del contenido insertado en la base de datos de MediaStore
     private var currentUri: Uri? = null
 
+    // Inicia el proceso de grabación configurando la fuente, formato y destino según la versión de Android
     fun startRecording(onStateChanged: (Boolean) -> Unit) {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss", Locale.getDefault()).format(Date())
 
+        // Instancia el MediaRecorder usando el constructor moderno en Android 12+ o el tradicional en versiones anteriores
         mediaRecorder = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
             MediaRecorder(context)
         } else {
@@ -45,6 +53,7 @@ class AudioRecorderManager(private val context: Context) {
                     context.contentResolver.openFileDescriptor(it, "w")?.fileDescriptor
                 }
 
+                // Configura e inicia la captura en el hardware de audio
                 mediaRecorder?.apply {
                     setAudioSource(MediaRecorder.AudioSource.MIC)
                     setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -63,6 +72,7 @@ class AudioRecorderManager(private val context: Context) {
                 val audioFile = File(musicDir, "AUDIO_$timeStamp.3gp")
                 outputFile = audioFile.absolutePath
 
+                // Configura e inicia la captura de audio indicando la ruta directa del archivo
                 mediaRecorder?.apply {
                     setAudioSource(MediaRecorder.AudioSource.MIC)
                     setOutputFormat(MediaRecorder.OutputFormat.THREE_GPP)
@@ -73,6 +83,7 @@ class AudioRecorderManager(private val context: Context) {
                 }
                 Toast.makeText(context, "Grabando audio en carpeta Music...", Toast.LENGTH_SHORT).show()
             }
+            // Notifica a la interfaz (Compose) que la grabación se inició con éxito
             onStateChanged(true)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -81,8 +92,10 @@ class AudioRecorderManager(private val context: Context) {
         }
     }
 
+    // Detiene la grabación actual, empaqueta el archivo y libera el hardware del micrófono
     fun stopRecording(onStateChanged: (Boolean) -> Unit) {
         try {
+            // Finaliza la captura y libera los recursos del sistema
             mediaRecorder?.apply {
                 stop()
                 release()
@@ -98,6 +111,7 @@ class AudioRecorderManager(private val context: Context) {
         } catch (e: Exception) {
             e.printStackTrace()
             mediaRecorder = null
+            // Garantiza que el estado vuelva a falso si ocurre una interrupción inesperada al detener
             onStateChanged(false)
         }
     }

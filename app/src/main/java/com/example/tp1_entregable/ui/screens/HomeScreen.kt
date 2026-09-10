@@ -235,7 +235,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                             for (doc in snapshot.documents) {
                                 val eventHour = doc.getString("hora")
 
-                                // Compara si la hora actual ya alcanzó o superó la hora del evento
+                                // Compara si la hora actual ya alcanzó la hora del evento
                                 if (eventHour != null && nowHour == eventHour) {
                                     isEmergencyActive = true
                                     emergencyManager.triggerAlert()
@@ -255,6 +255,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                 }
             }
 
+        // Limpieza de recursos al salir de la pantalla
         onDispose {
             checkRunnable?.let { handler.removeCallbacks(it) }
             listenerRegistration.remove()
@@ -464,7 +465,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                         btnFlash?.text = if (isFlashOn) "LINTERNA: ENCENDIDA" else "LINTERNA: APAGADA"
 
                         // -----------------------------------------------------------------------------------------------------
-                        // BOTON GRABAR VIDEO (FRONTAL/TRASERA Y SELFI) Y AUDIO POR MICROFONO
+                        // BOTON GRABAR VIDEO (TRASERA Y SELFI) Y AUDIO POR MICROFONO
                         // -----------------------------------------------------------------------------------------------------
 
                         // Actualización de textos en tiempo real según el estado
@@ -483,7 +484,7 @@ fun HomeScreen(modifier: Modifier = Modifier) {
                     modifier = Modifier.fillMaxSize()
                 )
 
-                // Interfaz de pantalla entera con efecto de luces si hay emergencia
+                // Interfaz de pantalla entera "Alerta de Emergencia" con efecto de luces si hay emergencia
                 if (isEmergencyActive) {
                     Box(
                         modifier = Modifier
