@@ -163,19 +163,6 @@ fun HomeScreen(modifier: Modifier = Modifier) {
     val audioManager = remember { AudioRecorderManager(context) }
     val previewView = remember { PreviewView(context) }
 
-    // La linterna (CameraManager) funcionará desde el primer momento porque la cámara estará libre. Ya
-    // que genera conflictos con inicializar CameraX tambien (codigo que tengo comentado).
-    /*
-    // Inicializar la cámara por defecto (trasera)
-    LaunchedEffect(Unit) {
-        videoManager.setupCamera(
-            lifecycleOwner = lifecycleOwner,
-            useFrontCamera = false,
-            surfaceProvider = previewView.surfaceProvider
-        )
-    }
-     */
-
     // -----------------------------------------------------------------------------------------------------
     // ALERTA DE EMERGENCIA
     // -----------------------------------------------------------------------------------------------------
